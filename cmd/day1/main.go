@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"errors"
-	"io"
+	"github.com/david-simon/advent-of-code-2025/internal/file"
 	"log"
 	"math"
-	"os"
 	"sort"
 	"strconv"
 )
@@ -60,35 +58,21 @@ func part1() {
 }
 
 func readInput() ([]int, []int, error) {
-	f, err := os.Open("inputs/day1.txt")
-	if err != nil {
-		return nil, nil, err
-	}
-	defer f.Close()
-
-	bufReader := bufio.NewReader(f)
 	leftCol := make([]int, 0)
 	rightCol := make([]int, 0)
 
-	for {
-		bytes, err := bufReader.ReadBytes('\n')
-		if err != nil && err != io.EOF {
+	for line, err := range file.Lines("inputs/day1.txt") {
+		if err != nil {
 			return nil, nil, err
 		}
 
-		if len(bytes) > 0 {
-			left, right, parseErr := parseLine(bytes)
-			if parseErr != nil {
-				return nil, nil, parseErr
-			}
-
-			leftCol = append(leftCol, left)
-			rightCol = append(rightCol, right)
+		left, right, err := parseLine(line)
+		if err != nil {
+			return nil, nil, err
 		}
 
-		if err == io.EOF {
-			break
-		}
+		leftCol = append(leftCol, left)
+		rightCol = append(rightCol, right)
 	}
 
 	return leftCol, rightCol, nil
