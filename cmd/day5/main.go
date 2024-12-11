@@ -2,13 +2,10 @@ package main
 
 import (
 	"github.com/david-simon/advent-of-code-2025/internal/file"
+	"github.com/david-simon/advent-of-code-2025/internal/utils"
 	"log"
 	"slices"
 )
-
-type Pair struct {
-	v1, v2 int
-}
 
 func main() {
 	part1()
@@ -23,11 +20,11 @@ func part2() {
 
 	indexedRules := make([][]bool, 100)
 	for _, rule := range rules {
-		if indexedRules[rule.v1] == nil {
-			indexedRules[rule.v1] = make([]bool, 100)
+		if indexedRules[rule.V1] == nil {
+			indexedRules[rule.V1] = make([]bool, 100)
 		}
 
-		indexedRules[rule.v1][rule.v2] = true
+		indexedRules[rule.V1][rule.V2] = true
 	}
 
 	res := 0
@@ -70,15 +67,15 @@ func sort(update []int, indexedRules [][]bool) []int {
 	return update
 }
 
-func isValidUpdate(update []int, rules []Pair) bool {
+func isValidUpdate(update []int, rules []utils.Pair) bool {
 	valueToIndex := make([]int, 100)
 	for i := 0; i < len(update); i++ {
 		valueToIndex[update[i]] = i
 	}
 
 	for _, rule := range rules {
-		if valueToIndex[rule.v1] != 0 && valueToIndex[rule.v2] != 0 {
-			if valueToIndex[rule.v1] > valueToIndex[rule.v2] {
+		if valueToIndex[rule.V1] != 0 && valueToIndex[rule.V2] != 0 {
+			if valueToIndex[rule.V1] > valueToIndex[rule.V2] {
 				return false
 			}
 		}
@@ -87,9 +84,9 @@ func isValidUpdate(update []int, rules []Pair) bool {
 	return true
 }
 
-func readInput() ([]Pair, [][]int, error) {
+func readInput() ([]utils.Pair, [][]int, error) {
 	updates := make([][]int, 0, 190)
-	rules := make([]Pair, 0, 1176)
+	rules := make([]utils.Pair, 0, 1176)
 	section1Parsed := false
 
 	for line, err := range file.Lines("inputs/day5.txt") {
@@ -104,7 +101,7 @@ func readInput() ([]Pair, [][]int, error) {
 
 		if !section1Parsed {
 			before, after := parseRule(line)
-			rules = append(rules, Pair{before, after})
+			rules = append(rules, utils.Pair{before, after})
 		} else {
 			updates = append(updates, parseUpdate(line))
 		}
